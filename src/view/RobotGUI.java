@@ -1,5 +1,9 @@
 package view;
 
+import java.awt.Window;
+
+import org.jdesktop.swingx.sort.SortUtils;
+
 import controller.IRobotController;
 import controller.RobotController;
 import javafx.application.Application;
@@ -12,6 +16,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -37,7 +42,8 @@ public class RobotGUI extends Application implements IRobotUI {
     private Map map;
     private Label coordLabel;
     private Label message;
-
+    private Label titleLbl;
+   
     @Override
     public void init() {
 	controller = new RobotController(this);
@@ -48,7 +54,7 @@ public class RobotGUI extends Application implements IRobotUI {
 	webcamView = new ImageView();
 	webcamView.setFitWidth(640);
 	webcamView.setFitHeight(480);
-	map = new Map(testMap(), new Pose(20, 20, 0));
+	map = new Map(this, testMap(), new Pose(20, 20, 0));
 	coordLabel = new Label("y=20, x=20");
 	message = new Label("");
 
@@ -56,23 +62,53 @@ public class RobotGUI extends Application implements IRobotUI {
 	String style = 
 	    "-fx-font-size: 14pt;"+
 	    "-fx-font-family: \"Courier New\";";
-	root.setStyle(style);
+	root.setStyle(style);	
 
 	GridPane movementBtns = movementButtons();
 	Pane mapArea = new Pane();
 	mapArea.getChildren().add(map);
-	GridPane center = new GridPane(); 
+	GridPane center = new GridPane();	
+	
+	HBox waypointBts = new HBox();
+	Button wpUndo = new Button("Undo");
+	Button wpGo = new Button("Go");
+	//waypointBts.setPadding(new Insets(10, 10, 10, 10));
+	waypointBts.setAlignment(Pos.BASELINE_RIGHT);
+	waypointBts.setSpacing(10);
+	waypointBts.getChildren().addAll(wpUndo, wpGo);
+	waypointBts.setVisible(false);
+	
+	//wpUndo.setOnAction(evt -> Map.navUndo());
+	//wpGo.setOnAction(evt-> Map.navGo());
+	
+	
+	ToggleButton navigation = new ToggleButton("Navigation");	
+	navigation.setOnAction(evt -> {
+		Platform.runLater(() -> {			
+			titleLbl.setText("Navigation setup");
+			waypointBts.setVisible(!waypointBts.isVisible());
+			map.toggleNavMode();			
+		});
+	});
+	
+	
+	
+	//center.setGridLinesVisible(true);
 
-	center.add(movementBtns, 0, 0);
-	center.add(mapArea, 1, 0);
+	center.add(navigation, 0, 0);
+	center.add(movementBtns, 0, 1);	
 	center.add(coordLabel, 0, 2);
-	center.add(message, 0, 3);
+	center.add(message, 1, 3);
+	center.add(mapArea, 1, 0);
+	center.add(waypointBts, 1, 2);
 
 	center.setPadding(new Insets(20, 20, 20, 20));
-	coordLabel.setPadding(new Insets(10, 10, 10, 10));
-	GridPane.setColumnSpan(coordLabel, 2);
-	GridPane.setConstraints(movementBtns, 0, 0, 1, 1, HPos.CENTER, VPos.BOTTOM);
+	coordLabel.setPadding(new Insets(10, 10, 10, 10));	
+	//GridPane.setColumnSpan(coordLabel, 2);
+	GridPane.setRowSpan(mapArea, 2);
+	//GridPane.setConstraints(movementBtns, 0, 0, 1, 1, HPos.CENTER, VPos.BOTTOM);
 	movementBtns.setAlignment(Pos.BOTTOM_CENTER);
+	
 
 	root.setTop(top());
 	root.setCenter(center);
@@ -80,8 +116,10 @@ public class RobotGUI extends Application implements IRobotUI {
 	Scene scene = new Scene(root);
 	window.setScene(scene);
 	window.setTitle("Robotti GUI");
+	window.setResizable(false);	
 	window.show();
     }
+	
 
     @Override
     public void updateVideo(Image image) {
@@ -102,7 +140,7 @@ public class RobotGUI extends Application implements IRobotUI {
     }
 
     @Override
-    public void setErrorMessage(String msg) {
+    public void setMessage(String msg) {
 	Platform.runLater(() -> {
 	    message.setText(msg);
 	});
@@ -123,7 +161,7 @@ public class RobotGUI extends Application implements IRobotUI {
 
 	Button videoButton = new Button("📹 webcam");
 
-	videoButton.setOnMouseClicked(evt -> {
+	videoButton.setOnAction(evt -> {
 	    Platform.runLater(() -> {
 		Stage webcamWindow = new Stage();
 		webcamWindow.setMinWidth(640);
@@ -155,15 +193,15 @@ public class RobotGUI extends Application implements IRobotUI {
 
 	Label connectedIcon = new Label("⬤");
 	connectedIcon.setTextFill(Color.web(red, 1));
-	Label connectedLbl = new Label("Disconnected");
-	connectedLbl.setTextFill(Color.web(red, 1));
+	titleLbl = new Label("");
+	//titleLbl.setTextFill(Color.web(red, 1));
 
-	connectBtn.setOnMouseClicked((evt) -> {
+	connectBtn.setOnAction((evt) -> {
 	    if (controller.isConnected()) {
 		controller.disconnect();
-		connectedLbl.setText("Disconnected");
+		message.setText("Disconnected");
 		connectedIcon.setTextFill(Color.web(red, 1));
-		connectedLbl.setTextFill(Color.web(red, 1));
+		message.setTextFill(Color.web(red, 1));
 		connectBtn.setText("Connect to EV3");
 	    } else {
 		int timeout = 1000;
@@ -172,14 +210,14 @@ public class RobotGUI extends Application implements IRobotUI {
 		    return;
 		}
 
-		connectedLbl.setText("Connected");
-		connectedLbl.setTextFill(Color.web(green, 1));
+		message.setText("Connected");
+		message.setTextFill(Color.web(green, 1));
 		connectedIcon.setTextFill(Color.web(green, 1));
 		connectBtn.setText("Disconnect EV3");
 	    }
 	});
 
-	topLeftArea.getChildren().addAll(connectedIcon, connectBtn, connectedLbl);
+	topLeftArea.getChildren().addAll(connectedIcon, connectBtn, titleLbl);
 	return topLeftArea;
     }
 
@@ -192,7 +230,7 @@ public class RobotGUI extends Application implements IRobotUI {
 	down.setRotate(180);
 	Button left = createMovementButton(Constants.TURN_ROBOT_LEFT, "⮶");
 	Button right = createMovementButton(Constants.TURN_ROBOT_RIGHT, "⮷");
-
+	
 	btnGrid.add(up, 1, 0);
 	btnGrid.add(down, 1, 1);
 	btnGrid.add(left, 0, 1);
