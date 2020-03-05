@@ -54,7 +54,7 @@ public class RobotGUI extends Application implements IRobotUI {
 	webcamView = new ImageView();
 	webcamView.setFitWidth(640);
 	webcamView.setFitHeight(480);
-	map = new Map(this, testMap(), new Pose(20, 20, 0));
+	map = new Map(testMap(), new Pose(20, 20, 0));
 	coordLabel = new Label("y=20, x=20");
 	message = new Label("");
 
@@ -65,50 +65,29 @@ public class RobotGUI extends Application implements IRobotUI {
 	root.setStyle(style);	
 
 	GridPane movementBtns = movementButtons();
-	Pane mapArea = new Pane();
-	mapArea.getChildren().add(map);
 	GridPane center = new GridPane();	
 	
-	HBox waypointBts = new HBox();
-	Button wpUndo = new Button("Undo");
-	Button wpGo = new Button("Go");
-	//waypointBts.setPadding(new Insets(10, 10, 10, 10));
-	waypointBts.setAlignment(Pos.BASELINE_RIGHT);
-	waypointBts.setSpacing(10);
-	waypointBts.getChildren().addAll(wpUndo, wpGo);
-	waypointBts.setVisible(false);
-	
-	//wpUndo.setOnAction(evt -> Map.navUndo());
-	//wpGo.setOnAction(evt-> Map.navGo());
-	
+	MapArea mapArea2 = new MapArea(controller, map);
 	
 	ToggleButton navigation = new ToggleButton("Navigation");	
 	navigation.setOnAction(evt -> {
 		Platform.runLater(() -> {			
 			titleLbl.setText("Navigation setup");
-			waypointBts.setVisible(!waypointBts.isVisible());
-			map.toggleNavMode();			
+			mapArea2.toggleNavMode();
 		});
 	});
 	
-	
-	
-	//center.setGridLinesVisible(true);
-
 	center.add(navigation, 0, 0);
 	center.add(movementBtns, 0, 1);	
 	center.add(coordLabel, 0, 2);
 	center.add(message, 1, 3);
-	center.add(mapArea, 1, 0);
-	center.add(waypointBts, 1, 2);
+	center.add(mapArea2, 1, 0);
+	center.add(mapArea2.getButtons(), 1, 2);
 
 	center.setPadding(new Insets(20, 20, 20, 20));
 	coordLabel.setPadding(new Insets(10, 10, 10, 10));	
-	//GridPane.setColumnSpan(coordLabel, 2);
-	GridPane.setRowSpan(mapArea, 2);
-	//GridPane.setConstraints(movementBtns, 0, 0, 1, 1, HPos.CENTER, VPos.BOTTOM);
+	GridPane.setRowSpan(mapArea2, 2);
 	movementBtns.setAlignment(Pos.BOTTOM_CENTER);
-	
 
 	root.setTop(top());
 	root.setCenter(center);
@@ -116,7 +95,7 @@ public class RobotGUI extends Application implements IRobotUI {
 	Scene scene = new Scene(root);
 	window.setScene(scene);
 	window.setTitle("Robotti GUI");
-	window.setResizable(false);	
+	// window.setResizable(false);	
 	window.show();
     }
 	

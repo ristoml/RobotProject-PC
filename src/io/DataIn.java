@@ -58,6 +58,7 @@ public class DataIn extends Thread {
 		    case POS:
 			Pose pose = new Pose();
 			pose.loadObject(in);
+			System.out.println(pose);
 			ui.updateMap(pose);
 			break;
 		}

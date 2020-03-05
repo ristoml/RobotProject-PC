@@ -1,10 +1,10 @@
 Main.class
 utils/Constants.class
 view/Map.class
+view/MapArea.class
 view/IRobotUI.class
 view/RobotGUI.class
 controller/IRobotController.class
 utils/OpenCVutils.class
-view/NavigationWindow.class
 io/DataIn.class
 controller/RobotController.class

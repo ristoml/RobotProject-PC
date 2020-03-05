@@ -11,6 +11,7 @@ import lejos.robotics.geometry.Rectangle;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
+import lejos.robotics.pathfinding.Path;
 
 /**
  * Map represents an enlarged JavaFx {@link Canvas} image of a Lejos {@link LineMap}.
@@ -206,5 +207,9 @@ public class Map extends Canvas {
 	for (Line l : map.getLines()) {
 	    gc.strokeLine(l.x1 * MULTIPLIER, l.y1 * MULTIPLIER, l.x2 * MULTIPLIER, l.y2 * MULTIPLIER);
 	}
+    }
+
+    public ArrayList<Waypoint> getWaypoints() {
+	return this.waypoints;
     }
 }

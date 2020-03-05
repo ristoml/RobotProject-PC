@@ -6,6 +6,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 import io.DataIn;
+import lejos.robotics.pathfinding.Path;
 import view.IRobotUI;
 import utils.Constants;
 
@@ -36,11 +37,11 @@ public class RobotController implements IRobotController {
 	    in.start();
 	    return true;
 	} catch (IOException ex) {
-	    ui.setErrorMessage("Connection failed.");
+	    ui.setMessage("Connection failed.");
 	    socket = null;
 	    return false;
 	} catch (Exception ex) {
-	    ui.setErrorMessage(ex.getMessage());
+	    ui.setMessage(ex.getMessage());
 	    socket = null;
 	    return false;
 	}
@@ -60,11 +61,11 @@ public class RobotController implements IRobotController {
 	    in.start();
 	    return true;
 	} catch (IOException ex) {
-	    ui.setErrorMessage("Connection failed.");
+	    ui.setMessage("Connection failed.");
 	    socket = null;
 	    return false;
 	} catch (Exception ex) {
-	    ui.setErrorMessage(ex.getMessage());
+	    ui.setMessage(ex.getMessage());
 	    socket = null;
 	    return false;
 	}
@@ -78,12 +79,12 @@ public class RobotController implements IRobotController {
 	try {
 	    socket.close();
 	} catch (IOException ex) {
-	    ui.setErrorMessage(ex.getMessage());
+	    ui.setMessage(ex.getMessage());
 	}
 	try {
 	    in.exit();
 	} catch (IOException ex) {
-	    ui.setErrorMessage(ex.getMessage());
+	    ui.setMessage(ex.getMessage());
 	} catch (Exception ex) {
 	}
 	socket = null;
@@ -103,7 +104,7 @@ public class RobotController implements IRobotController {
 	    out.writeInt(direction);
 	} catch (IOException ex) {
 	    System.out.println(ex.getMessage());
-	    ui.setErrorMessage(ex.getMessage());
+	    ui.setMessage(ex.getMessage());
 	}
     }
 
@@ -116,8 +117,20 @@ public class RobotController implements IRobotController {
 	try {
 	    out.writeInt(Constants.STOP);
 	} catch (IOException ex) {
-	    ui.setErrorMessage(ex.getMessage());
+	    ui.setMessage(ex.getMessage());
 	}
     }
+
+	@Override
+	public void sendWaypoints(Path wps) {
+	    if (!isConnected())
+		return;
+
+	    try {
+		out.writeInt(6);
+		wps.dumpObject(out);
+	    } catch (Exception e) {
+	    }
+	}
 
 }

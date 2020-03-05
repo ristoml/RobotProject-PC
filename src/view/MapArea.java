@@ -1,5 +1,6 @@
 package view;
 
+import controller.IRobotController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
@@ -14,7 +15,7 @@ import lejos.robotics.pathfinding.ShortestPathFinder;
 /**
 * MapArea
 */
-public class MapArea extends VBox {
+public class MapArea extends Pane {
 
     private static final int MULTIPLIER = 3;
 
@@ -29,13 +30,16 @@ public class MapArea extends VBox {
     private Button go;
 
     private boolean navMode;
+    private IRobotController controller;
 
-    public MapArea(Map map) {
+    public MapArea(IRobotController controller, Map map) {
+	this.controller = controller;
 	this.map = map;
-	this.navMode = true;
+	this.navMode = false;
 
 	this.pathFinder = new ShortestPathFinder(map.getMapFlipped());
-	pathFinder.lengthenLines(10);
+	// pathFinder.lengthenLines(10);
+	pathFinder.lengthenLines(20);
 	this.wpPose = map.getCurrentPose();
 	this.waypoints = new Path();
 	
@@ -46,7 +50,8 @@ public class MapArea extends VBox {
 
 	navButtons.getChildren().addAll(clear, undo, go);
 	navButtons.setAlignment(Pos.CENTER_RIGHT);
-	this.getChildren().addAll(map, navButtons);
+	// this.getChildren().addAll(map, navButtons);
+	this.getChildren().addAll(map);
 
 	map.setOnMouseClicked(e -> {
 	    if (!navMode) {
@@ -66,9 +71,9 @@ public class MapArea extends VBox {
 		pathFinder.findRoute(wpPose, wp);
 
 		waypoints.add(wp);
+		this.map.addWayPoint(wp);
 		wpPose = waypoints.get((waypoints.size()-1)).getPose();
 
-		this.map.addWayPoint(wp);
 	    } catch (DestinationUnreachableException ex) {
 		System.out.println("destination unr.");
 	    }
@@ -78,6 +83,7 @@ public class MapArea extends VBox {
 	clear.setOnMouseClicked(e -> {
 	    this.map.clearWayPoints();
 	    this.waypoints.clear();
+	    System.out.println(waypoints);
 	});
 
 	undo.setOnMouseClicked(e -> {
@@ -94,21 +100,32 @@ public class MapArea extends VBox {
 	    } else {
 
 	    }
-	    System.out.println(waypoints);
 	    this.map.undoWaypoint();
+	    System.out.println(waypoints);
 	});
 
 	go.setOnMouseClicked(e -> {
 	    if (!navMode) {
 		return;
 	    }
-	    // poistu nav modesta
-	    // lähetä waypointsit
-	    // nollaa waypoints-lista
+	    if (map.getWaypoints().isEmpty()) {
+		return;
+	    }
+	    System.out.println("send:\n"+this.waypoints);
+	    controller.sendWaypoints(this.waypoints);
+	    this.waypoints.clear();
+	    map.clearWayPoints();
+	    this.toggleNavMode();
 	});
+	this.navButtons.setVisible(false);
     }
 
     public void toggleNavMode() {
+	this.navButtons.setVisible(!navButtons.isVisible());
 	navMode = !navMode;
+    }
+
+    public HBox getButtons() {
+	return this.navButtons;
     }
 }

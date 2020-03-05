@@ -1,10 +1,10 @@
 /home/sami/Programs/eclipse/metropolia/RobotProject-PC/src/controller/RobotController.java
 /home/sami/Programs/eclipse/metropolia/RobotProject-PC/src/controller/IRobotController.java
 /home/sami/Programs/eclipse/metropolia/RobotProject-PC/src/view/IRobotUI.java
+/home/sami/Programs/eclipse/metropolia/RobotProject-PC/src/view/MapArea.java
 /home/sami/Programs/eclipse/metropolia/RobotProject-PC/src/utils/Constants.java
 /home/sami/Programs/eclipse/metropolia/RobotProject-PC/src/view/RobotGUI.java
 /home/sami/Programs/eclipse/metropolia/RobotProject-PC/src/Main.java
 /home/sami/Programs/eclipse/metropolia/RobotProject-PC/src/utils/OpenCVutils.java
 /home/sami/Programs/eclipse/metropolia/RobotProject-PC/src/view/Map.java
-/home/sami/Programs/eclipse/metropolia/RobotProject-PC/src/view/NavigationWindow.java
 /home/sami/Programs/eclipse/metropolia/RobotProject-PC/src/io/DataIn.java
