@@ -5,7 +5,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import lejos.robotics.navigation.DestinationUnreachableException;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
@@ -50,7 +49,6 @@ public class MapArea extends Pane {
 
 	navButtons.getChildren().addAll(clear, undo, go);
 	navButtons.setAlignment(Pos.CENTER_RIGHT);
-	// this.getChildren().addAll(map, navButtons);
 	this.getChildren().addAll(map);
 
 	map.setOnMouseClicked(e -> {

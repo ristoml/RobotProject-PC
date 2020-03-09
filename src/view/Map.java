@@ -20,7 +20,7 @@ import lejos.robotics.pathfinding.Path;
  * when {@link Waypoint}s are added or removed.
  *
  * @author Sami Arola
- * @author Risto Matti Leivo
+ * @author Risto Leivo
  */
 public class Map extends Canvas {
 

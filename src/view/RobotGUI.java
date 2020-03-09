@@ -92,6 +92,14 @@ public class RobotGUI extends Application implements IRobotUI {
 	root.setTop(top());
 	root.setCenter(center);
 
+	Button resetBtn = new Button("reset map");
+	resetBtn.setOnMouseClicked(evt -> {
+	    Platform.runLater(() -> {
+		map.redraw(new Pose(20, 20, 0));
+	    });
+	});
+	center.add(resetBtn, 2, 2);
+
 	Scene scene = new Scene(root);
 	window.setScene(scene);
 	window.setTitle("Robotti GUI");
