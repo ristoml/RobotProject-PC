@@ -123,6 +123,10 @@ public class MapArea extends Pane {
 	navMode = !navMode;
     }
 
+    public boolean isNavMode() {
+	return navMode;
+    }
+
     public HBox getButtons() {
 	return this.navButtons;
     }

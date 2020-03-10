@@ -4,9 +4,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.List;
 
 import io.DataIn;
 import lejos.robotics.pathfinding.Path;
+import model.IRobotConfigDAO;
+import model.RobotConfig;
+import model.RobotConfigDAOHibernate;
 import view.IRobotUI;
 import utils.Constants;
 
@@ -17,11 +21,20 @@ public class RobotController implements IRobotController {
     private DataIn in;
     private DataOutputStream out;
 
+    private IRobotConfigDAO dao;
+
     public RobotController(IRobotUI ui) {
 	this.ui = ui;
 	this.socket = null;
 	this.in = null;
 	this.out = null;
+	this.dao = null;
+
+	try {
+	    dao = new RobotConfigDAOHibernate();
+	} catch (Exception e) {
+	    System.out.println(e.getMessage());
+	}
     }
 
     @Override
@@ -121,16 +134,46 @@ public class RobotController implements IRobotController {
 	}
     }
 
-	@Override
-	public void sendWaypoints(Path wps) {
-	    if (!isConnected())
-		return;
+    @Override
+    public void sendWaypoints(Path wps) {
+	if (!isConnected())
+	    return;
 
-	    try {
-		out.writeInt(6);
-		wps.dumpObject(out);
-	    } catch (Exception e) {
-	    }
+	try {
+	    out.writeInt(6);
+	    wps.dumpObject(out);
+	} catch (Exception e) {
 	}
+    }
+
+    @Override
+    public List<RobotConfig> getConfigs() {
+	if (dao == null) {
+	    return null;
+	}
+	return dao.readConfigs();
+    }
+
+    @Override
+    public void saveConfig(RobotConfig config) {
+	if (dao != null) {
+	    dao.createConfig(config);
+	}
+    }
+
+    @Override
+    public void sendConfig(RobotConfig config) {
+	if (!isConnected()) {
+	    return;
+	}
+
+	try {
+	    // out.writeInt(9);
+	    out.writeDouble(config.getDiameter());
+	    out.writeDouble(config.getOffset());
+	} catch (Exception ex) {
+	    System.out.println(ex.getMessage());
+	}
+    }
 
 }

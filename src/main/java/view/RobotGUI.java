@@ -1,34 +1,33 @@
 package view;
 
-import java.awt.Window;
-
-import org.jdesktop.swingx.sort.SortUtils;
+import java.util.List;
 
 import controller.IRobotController;
 import controller.RobotController;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.geometry.HPos;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import lejos.robotics.geometry.Line;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.Pose;
+import model.RobotConfig;
 import utils.Constants;
 
 public class RobotGUI extends Application implements IRobotUI {
@@ -43,10 +42,18 @@ public class RobotGUI extends Application implements IRobotUI {
     private Label coordLabel;
     private Label message;
     private Label titleLbl;
-   
+
+    private RobotConfig conf;
+
     @Override
     public void init() {
 	controller = new RobotController(this);
+
+	double diameter = 4.15;
+	double offset = 6.49;
+	conf = new RobotConfig("default", diameter, offset);
+	// RobotConfig toinen = new RobotConfig("toinen", 0, 0);
+	// controller.saveConfig(toinen);
     }
 
     @Override
@@ -67,13 +74,13 @@ public class RobotGUI extends Application implements IRobotUI {
 	GridPane movementBtns = movementButtons();
 	GridPane center = new GridPane();	
 	
-	MapArea mapArea2 = new MapArea(controller, map);
+	MapArea mapArea = new MapArea(controller, map);
 	
 	ToggleButton navigation = new ToggleButton("Navigation");	
 	navigation.setOnAction(evt -> {
 		Platform.runLater(() -> {			
 			titleLbl.setText("Navigation setup");
-			mapArea2.toggleNavMode();
+			mapArea.toggleNavMode();
 		});
 	});
 	
@@ -81,24 +88,58 @@ public class RobotGUI extends Application implements IRobotUI {
 	center.add(movementBtns, 0, 1);	
 	center.add(coordLabel, 0, 2);
 	center.add(message, 1, 3);
-	center.add(mapArea2, 1, 0);
-	center.add(mapArea2.getButtons(), 1, 2);
+	center.add(mapArea, 1, 0);
+	center.add(mapArea.getButtons(), 1, 2);
 
 	center.setPadding(new Insets(20, 20, 20, 20));
 	coordLabel.setPadding(new Insets(10, 10, 10, 10));	
-	GridPane.setRowSpan(mapArea2, 2);
+	GridPane.setRowSpan(mapArea, 2);
 	movementBtns.setAlignment(Pos.BOTTOM_CENTER);
 
 	root.setTop(top());
 	root.setCenter(center);
 
-	Button resetBtn = new Button("reset map");
+	Button resetBtn = new Button("reset position");
 	resetBtn.setOnMouseClicked(evt -> {
 	    Platform.runLater(() -> {
 		map.redraw(new Pose(20, 20, 0));
 	    });
 	});
 	center.add(resetBtn, 2, 2);
+
+	Button configButton = new Button("robotconfig");
+	configButton.setOnMouseClicked(evt -> {
+	    Stage configWindow = new Stage();
+
+	    HBox croot = new HBox();
+
+	    ListView<String> configList = new ListView<>();
+	    List<RobotConfig> configs = controller.getConfigs();
+
+	    if (configs == null) {
+		croot
+		    .getChildren()
+		    .addAll(new Label("loading configs unsupported.\ndatabase connection failed."));
+	    } else {
+		ObservableList<String> listv = FXCollections.observableArrayList();
+		configs.forEach(c -> listv.add(c.toString()));
+		configList.setItems(listv);
+
+		Button selectConfBtn = new Button("set");
+		selectConfBtn.setOnMouseClicked(evt2 -> {
+		    int i = configList.getSelectionModel().getSelectedIndex();
+		    if (i == -1) return;
+		    conf = configs.get(i);
+		    System.out.println("set: "+conf);
+		});
+
+		croot.getChildren().addAll(configList, selectConfBtn);
+	    }
+	    configWindow.setScene(new Scene(croot));
+	    configWindow.setTitle("Robot configuration");
+	    configWindow.show();
+	});
+	center.add(configButton, 3, 3);
 
 	Scene scene = new Scene(root);
 	window.setScene(scene);
@@ -196,6 +237,8 @@ public class RobotGUI extends Application implements IRobotUI {
 		if (!success) {
 		    return;
 		}
+
+		controller.sendConfig(conf);
 
 		message.setText("Connected");
 		message.setTextFill(Color.web(green, 1));

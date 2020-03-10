@@ -1,10 +1,13 @@
-Main.class
-utils/Constants.class
+model/IRobotConfigDAO.class
 view/Map.class
 view/MapArea.class
 view/IRobotUI.class
+io/DataIn.class
+Main.class
+utils/Constants.class
 view/RobotGUI.class
 controller/IRobotController.class
 utils/OpenCVutils.class
-io/DataIn.class
+model/RobotConfig.class
+model/RobotConfigDAOHibernate.class
 controller/RobotController.class

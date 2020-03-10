@@ -4,7 +4,6 @@
   <artifactId>LoppuProjektiPC</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <build>
-    <sourceDirectory>src</sourceDirectory>
     <plugins>
 
       <plugin>
@@ -78,6 +77,13 @@
       <groupId>org.openpnp</groupId>
       <artifactId>opencv</artifactId>
       <version>3.2.0-0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-agroal</artifactId>
+      <version>5.4.12.Final</version>
+      <type>pom</type>
     </dependency>
   </dependencies>
 </project>
