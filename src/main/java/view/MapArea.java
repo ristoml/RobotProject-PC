@@ -37,7 +37,6 @@ public class MapArea extends Pane {
 	this.navMode = false;
 
 	this.pathFinder = new ShortestPathFinder(map.getMapFlipped());
-	// pathFinder.lengthenLines(10);
 	pathFinder.lengthenLines(20);
 	this.wpPose = map.getCurrentPose();
 	this.waypoints = new Path();

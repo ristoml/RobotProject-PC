@@ -7,7 +7,7 @@ public class Main {
 
 	try {
 	    Class.forName("org.mariadb.jdbc.Driver");
-	    //Class.forName("com.mysql.jdbc.Driver");
+	    // optional driver: Class.forName("com.mysql.jdbc.Driver");
 	} catch (ClassNotFoundException ex) {
 	    System.err.println("Loading JBCD-driver failed. Database not supported.");
 	}
