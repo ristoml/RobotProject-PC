@@ -1,24 +1,17 @@
 <hibernate-configuration>
   <session-factory>
-    <!-- Käytä MySQL-tietokantaa -->
     <property name="hibernate.dialect"> org.hibernate.dialect.MySQL5Dialect</property>
 
-      <!-- Yhteyden perustiedot: ajuri, palvelin käyttäjätunnus/salasana -->
     <property name="hibernate.connection.driver_class">org.mariadb.jdbc.Driver</property>
     <property name="hibernate.connection.url">jdbc:mysql://localhost/olso11</property>
     <property name="hibernate.connection.username">olso</property>
     <property name="hibernate.connection.password">olso</property>
 
-      <!-- create , create-drop, update tai validate -->
-      <!-- Älä käytä tuotantoversioissa, ts, älä anna Hibernaten enää muuttaa taulurakennetta  -->
-      <!-- Ekalla kerralla create, kun kanta olemassa validate -->
     <!-- <property name="hbm2ddl.auto">create</property> -->
     <property name="hbm2ddl.auto">validate</property>
 
-      <!-- kun true, kaiuta kaikki SQL-lauseet stdout:iin -->
     <property name="show_sql">true</property>
 
-      <!-- Mallitason DTO-oliot, pakkausnimet mukaan -->
     <mapping class="model.RobotConfig" />
   </session-factory>
 </hibernate-configuration>

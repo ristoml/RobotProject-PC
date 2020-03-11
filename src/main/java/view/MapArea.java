@@ -3,6 +3,7 @@ package view;
 import controller.IRobotController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import lejos.robotics.navigation.DestinationUnreachableException;
@@ -31,7 +32,7 @@ public class MapArea extends Pane {
     private boolean navMode;
     private IRobotController controller;
 
-    public MapArea(IRobotController controller, Map map) {
+    public MapArea(IRobotController controller, Map map, ToggleButton togglebtn) {
 	this.controller = controller;
 	this.map = map;
 	this.navMode = false;
@@ -114,6 +115,7 @@ public class MapArea extends Pane {
 	    this.waypoints.clear();
 	    map.clearWayPoints();
 	    this.toggleNavMode();
+	    togglebtn.setSelected(false);
 	});
 	this.navButtons.setVisible(false);
     }
@@ -130,4 +132,5 @@ public class MapArea extends Pane {
     public HBox getButtons() {
 	return this.navButtons;
     }
+
 }

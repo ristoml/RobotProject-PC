@@ -22,6 +22,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import lejos.robotics.geometry.Line;
@@ -74,9 +75,9 @@ public class RobotGUI extends Application implements IRobotUI {
 	GridPane movementBtns = movementButtons();
 	GridPane center = new GridPane();	
 	
-	MapArea mapArea = new MapArea(controller, map);
-	
 	ToggleButton navigation = new ToggleButton("Navigation");	
+	MapArea mapArea = new MapArea(controller, map, navigation);
+	
 	navigation.setOnAction(evt -> {
 		Platform.runLater(() -> {			
 			titleLbl.setText("Navigation setup");
@@ -99,15 +100,14 @@ public class RobotGUI extends Application implements IRobotUI {
 	root.setTop(top());
 	root.setCenter(center);
 
-	Button resetBtn = new Button("reset position");
+	Button resetBtn = new Button("Reset position");
 	resetBtn.setOnMouseClicked(evt -> {
 	    Platform.runLater(() -> {
 		map.redraw(new Pose(20, 20, 0));
 	    });
 	});
-	center.add(resetBtn, 2, 2);
 
-	Button configButton = new Button("robotconfig");
+	Button configButton = new Button("Robot config");
 	configButton.setOnMouseClicked(evt -> {
 	    Stage configWindow = new Stage();
 
@@ -139,7 +139,10 @@ public class RobotGUI extends Application implements IRobotUI {
 	    configWindow.setTitle("Robot configuration");
 	    configWindow.show();
 	});
-	center.add(configButton, 3, 3);
+	VBox resetAndconfBtns = new VBox(); 
+	resetAndconfBtns.getChildren().addAll(resetBtn, configButton);
+	center.add(resetAndconfBtns, 3, 3);
+
 
 	Scene scene = new Scene(root);
 	window.setScene(scene);
@@ -187,7 +190,7 @@ public class RobotGUI extends Application implements IRobotUI {
 	topRightArea.setPadding(new Insets(5, 5, 5, 5));
 	topRightArea.setSpacing(20);
 
-	Button videoButton = new Button("📹 webcam");
+	Button videoButton = new Button("📹 Webcam");
 
 	videoButton.setOnAction(evt -> {
 	    Platform.runLater(() -> {
