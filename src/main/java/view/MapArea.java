@@ -13,7 +13,9 @@ import lejos.robotics.pathfinding.Path;
 import lejos.robotics.pathfinding.ShortestPathFinder;
 
 /**
-* MapArea
+* A pane that contains a @{@link Map} and buttons for to use with navigation mode.
+* Navigation mode means a mode, where user can click waypoints to the map, that can be sent
+* to the robot by clicking the "go"-button.
 */
 public class MapArea extends Pane {
 
@@ -38,7 +40,6 @@ public class MapArea extends Pane {
 	this.navMode = false;
 
 	this.pathFinder = new ShortestPathFinder(map.getMapFlipped());
-	// pathFinder.lengthenLines(10);
 	pathFinder.lengthenLines(20);
 	this.wpPose = map.getCurrentPose();
 	this.waypoints = new Path();
@@ -120,15 +121,24 @@ public class MapArea extends Pane {
 	this.navButtons.setVisible(false);
     }
 
+    /**
+     * Hides or shows the buttons for navigation mode.
+     */
     public void toggleNavMode() {
 	this.navButtons.setVisible(!navButtons.isVisible());
 	navMode = !navMode;
     }
 
+    /**
+     * @return true if navigation mode is on (buttons visible), false otherwise.
+     */
     public boolean isNavMode() {
 	return navMode;
     }
 
+    /**
+     * @return A HBox containing navigation mode controlling buttons.
+     */
     public HBox getButtons() {
 	return this.navButtons;
     }

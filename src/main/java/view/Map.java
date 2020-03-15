@@ -16,7 +16,7 @@ import lejos.robotics.pathfinding.Path;
 /**
  * Map represents an enlarged JavaFx {@link Canvas} image of a Lejos {@link LineMap}.
  * It is able to draw a position with direction, using Lejos' {@link Pose}-class.
- * It also includes a {@link List} of {@link Waypoint}s, which are automatically drawn to the map,
+ * It also includes a List of {@link Waypoint}s, which are automatically drawn to the map,
  * when {@link Waypoint}s are added or removed.
  *
  * @author Sami Arola
@@ -24,6 +24,9 @@ import lejos.robotics.pathfinding.Path;
  */
 public class Map extends Canvas {
 
+    /**
+     * A multiplier added to Map's dimensions in order enlarge it for the graphical user interface.
+     */
     private static final int MULTIPLIER = 3;
 
     private LineMap map;
@@ -34,8 +37,8 @@ public class Map extends Canvas {
     private ArrayList<Waypoint> waypoints;
 
     /**
-     * Creates and draws a new Map based {@link LineMap} and {@link Pose}.
-     * The {@link LineMap} is stored with its y-axis flipped, since JavaFX {@link Canvas} uses
+     * Creates and draws a new Map based {@link LineMap} and {@link Pose}.<br>
+     * The {@link LineMap} is stored with its y-axis flipped, since JavaFX {@link Canvas} uses<br>
      * a different coordinate system than Lejos {@link LineMap}.
      * @param map {@link LineMap}
      * @param initialPose starting position when a Map is constructed.
@@ -59,8 +62,8 @@ public class Map extends Canvas {
     }
 
     /**
-     * {@link LineMap} is stored in the class with y-axis flipped.
-     * This method flips the y-axis to original state and returns a new LineMap as result.
+     * {@link LineMap} is stored in the class with y-axis flipped.<br>
+     * This method flips the y-axis to original state and returns a new LineMap as result.<br>
      * @return a new copy of the original LineMap.
      */
     public LineMap getMapFlipped() {
@@ -68,8 +71,8 @@ public class Map extends Canvas {
     }
 
     /**
-     * {@link LineMap} is stored in the class with y-axis flipped.
-     * This method returns a new copy of the LineMap set to this Map-object.
+     * {@link LineMap} is stored in the class with y-axis flipped.<br>
+     * This method returns a new copy of the LineMap set to this Map-object.<br>
      * @return a new copy of the original LineMap with y-axis flipped.
      */
     public LineMap getMap() {
@@ -209,6 +212,9 @@ public class Map extends Canvas {
 	}
     }
 
+    /*
+     * @return the list of waypoints in this Map
+     */
     public ArrayList<Waypoint> getWaypoints() {
 	return this.waypoints;
     }

@@ -35,6 +35,20 @@
     </plugins>
   </build>
 
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.1.1</version>
+        <configuration>
+	  <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+          <overview>${basedir}/overview.html</overview>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+
   <dependencies>
     <dependency>
       <groupId>org.openjfx</groupId>

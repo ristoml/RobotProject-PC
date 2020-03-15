@@ -12,9 +12,13 @@ import javafx.beans.property.ObjectProperty;
 import javafx.embed.swing.SwingFXUtils;
 
 /**
- * The code in this file was taken from here:
- * https://github.com/opencv-java/getting-started/blob/master/FXHelloCV/src/it/polito/elite/teaching/cv/utils/Utils.java
- *
+ * This class uses code found from link below, without any modifications other than the class name:<br>
+ * <a href="https://github.com/opencv-java/getting-started/blob/master/FXHelloCV/src/it/polito/elite/teaching/cv/utils/Utils.java">
+ *   https://github.com/opencv-java/getting-started/blob/master/FXHelloCV/src/it/polito/elite/teaching/cv/utils/Utils.java
+ * </a><br>
+ * <br>
+ * Original javadoc description below:<br>
+ * <br>
  * Provide general purpose methods for handling OpenCV-JavaFX data conversion.
  * Moreover, expose some "low level" methods for matching few JavaFX behavior.
  *
